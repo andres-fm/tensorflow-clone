@@ -1662,26 +1662,29 @@ def _StridedSliceShape(op):
 
       full_index += 1
 
-  # Compute each dimensions contribution to the "processing" shape
-  final_dims = []
-  for dim in range(dense_dims):
-    shrink = (dense_shrink_axis & (1 << dim)) != 0
-    final_dims.append(
-        _compute_size_of_strided_dim(shrink, dense_specs[dim], input_shape.dims[
-            dim]))
+  final_dims = get_final_dims(dense_dims, dense_shrink_axis, shrink, dense_specs)
+  final_shape = get_final_shape()
 
-  # Gather the final shape from the processing shape
+  return [tensor_shape.TensorShape(final_shape())]
+
+# Compute each dimensions contribution to the "processing" shape
+def get_final_dims(dense_dims, dense_shrink_axis, shrink, dense_specs):
+  final_dims = []
+    for dim in range(dense_dims):
+      shrink = (dense_shrink_axis & (1 << dim)) != 0
+      final_dims.append(
+          _compute_size_of_strided_dim(shrink, dense_specs[dim], input_shape.dims[
+              dim]))
+      
+# Gather the final shape from the processing shape
+def get_final_shape(final_shape_gather) :
   final_shape = []
   for index in final_shape_gather:
     if index == NEW_AXIS:
       final_shape.append(1)
-    elif index == SHRINK_AXIS:
-      pass
-    else:
+    elif index != SHRINK_AXIS:
       final_shape.append(final_dims[index])
-
-  return [tensor_shape.TensorShape(final_shape)]
-
+  return final_shape
 
 @ops.RegisterShape("Gather")
 def _GatherShape(op):

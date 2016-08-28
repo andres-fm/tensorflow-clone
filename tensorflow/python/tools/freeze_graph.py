@@ -66,12 +66,9 @@ tf.app.flags.DEFINE_boolean("clear_devices", True,
 tf.app.flags.DEFINE_string("initializer_nodes", "", "comma separated list of "
                            "initializer nodes to run before freezing.")
 
-
-def freeze_graph(input_graph, input_saver, input_binary, input_checkpoint,
-                 output_node_names, restore_op_name, filename_tensor_name,
-                 output_graph, clear_devices, initializer_nodes):
-  """Converts all variables in a graph and checkpoint into constants."""
-
+# validates freeze_graph inputs
+def validate_inputs(input_graph, input_saver,input_checkpoint,output_node_names):
+  
   if not tf.gfile.Exists(input_graph):
     print("Input graph file '" + input_graph + "' does not exist!")
     return -1
@@ -87,6 +84,11 @@ def freeze_graph(input_graph, input_saver, input_binary, input_checkpoint,
   if not output_node_names:
     print("You need to supply the name of a node to --output_node_names.")
     return -1
+
+def freeze_graph(input_graph, input_saver, input_binary, input_checkpoint,
+                 output_node_names, restore_op_name, filename_tensor_name,
+                 output_graph, clear_devices, initializer_nodes):
+  """Converts all variables in a graph and checkpoint into constants."""
 
   input_graph_def = tf.GraphDef()
   mode = "rb" if input_binary else "r"
