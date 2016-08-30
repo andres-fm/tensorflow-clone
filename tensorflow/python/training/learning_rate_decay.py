@@ -128,12 +128,15 @@ def piecewise_constant(x, boundaries, values, name=None):
     # Avoid explicit conversion to x's dtype. This could result in faulty
     # comparisons, for example if floats are converted to integers.
     boundaries = ops.convert_n_to_tensor(boundaries)
-    if not all(b.dtype == x.dtype for b in boundaries):
-      raise ValueError('boundaries must have the same dtype as x.')
+    for b in boundaries :
+      if b.type != x.dtype :
+        raise ValueError('boundaries must have the same dtype as x.')
+      
     # TODO(rdipietro): Ensure that boundaries' elements are strictly increasing.
     values = ops.convert_n_to_tensor(values)
-    if not all(v.dtype == values[0].dtype for v in values):
-      raise ValueError('values must have elements all with the same dtype.')
+    for v in values :
+      if v.dtype != values[0].dtype :
+        raise ValueError('values must have elements all with the same dtype.')
 
     pred_fn_pairs = {}
     pred_fn_pairs[x <= boundaries[0]] = lambda: values[0]

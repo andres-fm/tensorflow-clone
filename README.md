@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div align="center">
   <img src="https://www.tensorflow.org/images/tf_logo_transp.png"><br><br>
 </div>
@@ -64,3 +65,6 @@ Hello, TensorFlow!
 * [TensorFlow MOOC on Udacity] (https://www.udacity.com/course/deep-learning--ud730)
 
 The TensorFlow community has created amazing things with TensorFlow, please see the [resources section of tensorflow.org](https://www.tensorflow.org/versions/master/resources#community) for an incomplete list.
+=======
+# tensorflow-clone
+>>>>>>> e182b0eb03933cb2a73e0f261971d487b92737e7

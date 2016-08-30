@@ -197,6 +197,13 @@ class Optimizer(object):
     return self.apply_gradients(grads_and_vars, global_step=global_step,
                                 name=name)
 
+  def valid_gradients(var_list) :
+    for var in var_list:
+      if not isinstance(var, variables.Variable):
+        raise TypeError("Argument is not a tf.Variable: %s" % var)
+    if not var_list:
+      raise ValueError("No variables to optimize")
+
   def compute_gradients(self, loss, var_list=None,
                         gate_gradients=GATE_OP,
                         aggregation_method=None,
@@ -240,11 +247,7 @@ class Optimizer(object):
       self._assert_valid_dtypes([grad_loss])
     if var_list is None:
       var_list = variables.trainable_variables()
-    for var in var_list:
-      if not isinstance(var, variables.Variable):
-        raise TypeError("Argument is not a tf.Variable: %s" % var)
-    if not var_list:
-      raise ValueError("No variables to optimize")
+    valid_gradients(var_list)
     var_refs = [v.ref() for v in var_list]
     grads = gradients.gradients(
         loss, var_refs, grad_ys=grad_loss,
